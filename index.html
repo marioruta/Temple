@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SEPTA Bus Routes Map</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+<style>
+  body { margin: 0; padding: 0; }
+  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  // Mapbox token placeholder for GitHub push
+  // Replace 'YOUR_MAPBOX_PUBLIC_TOKEN' locally to see the map
+  mapboxgl.accessToken = 'YOUR_MAPBOX_PUBLIC_TOKEN';
+
+  const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/light-v11',
+      zoom: 9,
+      center: [-75.3464, 39.9835]
+  });
+
+  map.on('load', () => {
+      map.addSource('bus-routes', {
+          type: 'vector',
+          url: 'mapbox://marioruta.cs8c3ype'  // ← your tileset ID
+      });
+
+      map.addLayer({
+          'id': 'routes',
+          'type': 'line',
+          'source': 'bus-routes',
+          'source-layer': 'YOUR_SOURCE_LAYER_NAME_HERE',  // ← exact source layer from Mapbox Studio
+          'layout': { 'line-join': 'round', 'line-cap': 'round' },
+          'paint': { 'line-color': '#ff69b4', 'line-width': 2 }
+      });
+  });
+</script>
+</body>
+</html>
