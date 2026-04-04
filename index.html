@@ -19,10 +19,14 @@
 
   const map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/light-v11'
+      style: 'mapbox://styles/mapbox/light-v11',
+      zoom: 9,
+      center: [-75.3464, 39.9835]
   });
 
+  // Ensure map fully loads before adding source/layer
   map.on('load', () => {
+      // Add SEPTA bus routes vector tiles
       map.addSource('bus-routes', {
           type: 'vector',
           url: 'mapbox://marioruta.cs8c3ype'
@@ -32,28 +36,15 @@
           id: 'routes',
           type: 'line',
           source: 'bus-routes',
-          'source-layer': 'route_shapes-d5ee5g',  // your real source layer
+          'source-layer': 'route_shapes-d5ee5g',  // exact layer name from Mapbox Studio
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: { 'line-color': '#ff69b4', 'line-width': 2 }
       });
-
-      // Zoom to the bounds of all features in the vector layer
-      map.once('idle', () => {
-          const features = map.querySourceFeatures('bus-routes', {
-              sourceLayer: 'route_shapes-d5ee5g'
-          });
-
-          if (features.length) {
-              const bounds = features.reduce((b, f) => {
-                  return f.geometry.coordinates.reduce((bb, coord) => {
-                      return bb.extend(coord);
-                  }, b);
-              }, new mapboxgl.LngLatBounds(features[0].geometry.coordinates[0], features[0].geometry.coordinates[0]));
-
-              map.fitBounds(bounds, { padding: 20 });
-          }
-      });
   });
+
+  // Optional: log Mapbox errors to console
+  map.on('error', (e) => console.error('Mapbox error:', e));
+
 </script>
 </body>
 </html>
