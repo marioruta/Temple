@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cesiumContainer"></div>
+
+  <script>
+    Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxMDZkMWY1YS03MjMwLTRlZWQtYmRiMS05ZmI3NTQzOTU4MjAiLCJpZCI6NDIwMTUxLCJpYXQiOjE3NzY1NzU2ODZ9.EguNe-S3nB1jcKgvo9y9cozLul7GtX0AEoyTnWYH4dc";
+
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+      terrainProvider: false,
+      baseLayerPicker: false,
+      animation: false,
+      timeline: false
+    });
+
+    async function loadTiles() {
+      try {
+        const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(2275207);
+        viewer.scene.primitives.add(tileset);
+        await viewer.zoomTo(tileset);
+      } catch (error) {
+        console.error("Tileset failed to load:", error);
+      }
+    }
+
+    loadTiles();
+  </script>
+</body>
+</html>
